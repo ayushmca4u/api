@@ -287,7 +287,8 @@ class VoucherController extends Controller
                         $response= ["error"=>array("code"=>$error_code,"message"=>$message),"result"=>$result,"success"=>$success];
                         return response()->json($response,$error_code);
 		}		
-		$Merchant_voucher = Merchant_voucher::where('merchant_id',$merchant_id)->where('voucher_code',$voucher_code)->orderBy('vid','desc')->first();
+	#	$Merchant_voucher = Merchant_voucher::where('merchant_id',$merchant_id)->where('voucher_code',$voucher_code)->orderBy('vid','desc')->first();
+		$Merchant_voucher = Merchant_voucher::join("package_details",'merchant_voucher_details.package_id','=','package_details.package_id')->join("merchants",'merchants.id','=','merchant_voucher_details.merchant_id')->where('merchant_voucher_details.merchant_id',$merchant_id)->where('voucher_code',$voucher_code)->select('merchant_voucher_details.*','package_details.package_name','merchants.name as merchant_name')->orderBy('vid','desc')->first();
                 if($Merchant_voucher)
                 {
                         $error_code="403";
